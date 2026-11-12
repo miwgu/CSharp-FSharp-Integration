@@ -1,9 +1,18 @@
+using CSharpApp.Data;
+using CSharpApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages(); 
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc().AddRazorRuntimeCompilation();
+
+// Dependency Injection
+builder.Services.AddScoped<CallRepository>();
+builder.Services.AddScoped<CallDataService>();
+builder.Services.AddScoped<DashboardService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
