@@ -1,0 +1,220 @@
+﻿@using UtvecklareTest.Models
+@using System.Text.Json
+
+
+@model DashboardView
+
+<div class="text-center">
+    <h1 class="display-4">Uppgift</h1>
+    <br />
+    <p>
+        Sofia vill ha en överblick över hur många telefonsamtal som varje kundtjänstmedarbetare har svarat.<br />
+        Skapa en dashboard som visar antal telefonsamtal per kundtjänstmedarbetare, per dag här nedan.
+        Du ska populera data från den färdiga list-modellen <code>Call</code>. Du har fria händer att bestämma vilka ramverk du vill använda och hur du vill visualisera i grafer och tabeller.
+    </p>
+</div>
+
+
+    @{
+      var year ="2025";
+      var yearData = Model.FlatRecordsByYear.ContainsKey(year)
+                         ?Model.FlatRecordsByYear[year]
+                         : new List<FlatData>();
+
+      var datesLabels = Model.LabelsByYear.ContainsKey(year)
+                         ?Model.LabelsByYear[year]
+                         :new List<string>();
+    }
+    <div class="row">
+        <div class="col-12 text-center">
+            <h5>Daglig samtal per kundtjänstmedarbetare</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Namn</th>
+                            @foreach (var date in datesLabels)
+                {
+                            <th>@date</th>
+                }
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var emp in Model.AllEmployeeNames)
+        {
+                        <tr>
+                            <td>@emp</td>
+                            @foreach (var date in datesLabels)
+                {
+                    var rec = yearData.FirstOrDefault(d =>d.Name ==emp && d.DateString==date);
+
+                            <td>@(rec?.Calls ?? 0)</td>
+                }
+                        </tr>
+        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<br />
+<div>
+    <select id="yearSelect">
+        @foreach (var y in Model.AvailableYears)
+  {
+       if (y == "2025")
+    {
+        <option value="@y" selected="selected">@y</option>
+    }
+    else
+    {
+        <option value="@y">@y</option>
+    }
+}
+
+    </select>
+
+    <select id="monthSelect">
+        <option value="">Välj månad</option>
+
+    </select>
+    <div class="col-12 text-center">
+        <h5>Antal samtal per kundtjänstmedarbetare per dag</h5>
+        <canvas id="callsBarChart"></canvas>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+    const flatRecordsByYear = @Html.Raw(JsonSerializer.Serialize(Model.FlatRecordsByYear));
+    const labelsByMonth = @Html.Raw(JsonSerializer.Serialize(Model.LabelsByMonth));
+    const allEmployeeNames = @Html.Raw(JsonSerializer.Serialize(Model.AllEmployeeNames));
+
+    console.log(flatRecordsByYear);
+    console.log(labelsByMonth);
+    console.log(allEmployeeNames);
+
+    let currentYear = "2025";
+    let currentMonth = "";
+
+    //const dates = flatRecordsByYear[currentYear].map(d => d.DateString).sort();
+
+
+    //Droppdown option for month
+    function updateMonthOptions(year) {
+        const monthSelect = document.getElementById('monthSelect');
+        monthSelect.innerHTML = '<option value ="">Välj månad</option>';
+
+        // 2025-03...
+        const months = Object.keys(labelsByMonth).filter(ym => ym.startsWith(year));
+
+        months.forEach(ym => {
+                const opt = document.createElement('option');
+                opt.value = ym;
+                opt.text = ym;
+                monthSelect.appendChild(opt);
+
+            });
+
+        // Select the first month by default
+        if (months.length > 0) {
+            monthSelect.value = months[0];
+            currentMonth = months[0];
+            updateChart();
+        } else {
+            currentMonth = "";
+            chart.data.labels = [];
+            chart.data.datasets = [];
+            chart.update();
+
+        }
+
+    }
+
+        const bgcolors = [
+            "#FFC0CB", "#DDA0DD", "#B0E0E6", "#4169E1",
+            "#FFD700", "#90EE90", "#FF7F50", "#20B2AA",
+            "#1E90FF", "#FFFF00", "#FF8C00", "#CD5C5C"
+        ];
+
+    //prepare datasets for Chart.js
+    function customDatasets(filteredData , dates) {
+        return allEmployeeNames.map((emp, i) => ({ // i->0,1,2,3 (4 employees)
+        label: emp,
+        data: dates.map(date => {
+            const rec = filteredData.find(d => d.DateString === date && d.Name === emp);
+            return rec.Calls;
+        }),
+        backgroundColor: bgcolors[i % bgcolors.length]
+
+        }));
+
+    }
+
+    // Update chart based on current month selection
+    function updateChart() {
+
+        if (!currentMonth) {
+            chart.data.labels = [];
+            chart.data.datasets = [];
+            chart.update();
+            return;
+        }
+
+          const filteredData = flatRecordsByYear[currentYear].filter(d => d.YearMonthString === currentMonth);
+          const dates = labelsByMonth[currentMonth];
+
+          chart.data.labels = dates;
+          chart.data.datasets = customDatasets(filteredData, dates);
+          chart.update();
+
+     }
+
+
+
+    const ctx = document.getElementById('callsBarChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar', // bar graph
+        data: {
+            labels: [],
+            datasets: []// label(emp), data(calls) and  backgroundColor
+        },
+        options: {
+            responsive: true,
+             plugins: {
+                 title: {
+                    display: false,
+                    text: 'Antal samtal per kundtjänstmedarbetare per dag'
+                }
+            },
+            scales: {
+                x: { stacked: false },
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    //1. setup month options based on initial year
+    updateMonthOptions(currentYear);
+    //2. initial chart render
+    updateChart();
+
+    // Year/Month Dropdown Change Event
+    document.getElementById('yearSelect').addEventListener('change', function () {
+        currentYear = this.value;
+        updateMonthOptions(currentYear);
+
+    });
+
+    document.getElementById('monthSelect').addEventListener('change', function() {
+        currentMonth = this.value;
+        if (!currentMonth) return;
+
+        updateChart();
+    });
+
+    </script>
+
