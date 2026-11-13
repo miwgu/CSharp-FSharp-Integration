@@ -24,8 +24,9 @@ namespace UtvecklareTest.Controllers
         {
             var calls = _repository.GetAll();
 
-            var names = _callService
-                .GetAllEmployeeNames(calls);
+            //change:C# GetAllEmployeeNames to F#
+            var names = FunctionalCore.CallDataService
+                .getAllEmployeeNames(calls);
 
             var flatRecords = _callService
                 .GetFlatRecords(calls, names);
