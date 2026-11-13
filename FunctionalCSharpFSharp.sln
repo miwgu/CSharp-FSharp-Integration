@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpApp", "CSharpApp\CSharpApp.csproj", "{DF942F04-328C-4E77-A29F-3313883D2421}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{DF942F04-328C-4E77-A29F-3313883D2421}.Release|x64.Build.0 = Release|Any CPU
 		{DF942F04-328C-4E77-A29F-3313883D2421}.Release|x86.ActiveCfg = Release|Any CPU
 		{DF942F04-328C-4E77-A29F-3313883D2421}.Release|x86.Build.0 = Release|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Debug|x64.Build.0 = Debug|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Debug|x86.Build.0 = Debug|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Release|x64.ActiveCfg = Release|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Release|x64.Build.0 = Release|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Release|x86.ActiveCfg = Release|Any CPU
+		{DBDCF043-CAF7-43B8-BDA8-9D9DA7DC9135}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
