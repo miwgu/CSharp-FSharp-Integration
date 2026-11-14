@@ -28,8 +28,9 @@ namespace UtvecklareTest.Controllers
             var names = FunctionalCore.CallDataService
                 .getAllEmployeeNames(calls);
 
-            var flatRecords = _callService
-                .GetFlatRecords(calls, names);
+            //change:C# GetFlatRecords to F#
+            var flatRecords = FunctionalCore.CallDataService
+                .getFlatRecords(calls, names);
 
             var dashboard = _dashboardService
                 .CreateDashboard(flatRecords, names);
