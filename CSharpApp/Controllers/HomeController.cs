@@ -7,16 +7,13 @@ namespace UtvecklareTest.Controllers
     public class HomeController : Controller
     {
         private readonly CallRepository _repository;
-        private readonly CallDataService _callService;
         private readonly DashboardService _dashboardService;
 
         public HomeController(
             CallRepository repository,
-            CallDataService callService,
             DashboardService dashboardService)
         {
             _repository = repository;
-            _callService = callService;
             _dashboardService = dashboardService;
         }
 
@@ -24,11 +21,9 @@ namespace UtvecklareTest.Controllers
         {
             var calls = _repository.GetAll();
 
-            //change:C# GetAllEmployeeNames to F#
             var names = FunctionalCore.CallDataService
                 .getAllEmployeeNames(calls);
 
-            //change:C# GetFlatRecords to F#
             var flatRecords = FunctionalCore.CallDataService
                 .getFlatRecords(calls, names);
 
